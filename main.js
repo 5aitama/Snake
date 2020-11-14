@@ -27,7 +27,7 @@ async function OnDocumentReady() {
         return
     }
 
-    const vsSrc = await fetch('test.frag')
+    const vsSrc = await fetch('test.frag').then(res => res.text())
     console.log(vsSrc)
 }
 
