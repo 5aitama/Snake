@@ -100,14 +100,13 @@ function Resize(gl)
 {
     const pixelRatio = window.devicePixelRatio;
 
-    var screenWidth  = Math.floor(gl.canvas.clientWidth  * pixelRatio);
-    var screenHeight = Math.floor(gl.canvas.clientHeight * pixelRatio);
+    const screenWidth  = Math.floor(gl.canvas.clientWidth  * pixelRatio);
+    const screenHeight = Math.floor(gl.canvas.clientHeight * pixelRatio);
 
     // Check if the canvas is not the same size.
     if (gl.canvas.width  !== screenWidth ||
         gl.canvas.height !== screenHeight) 
     {
-
         // Make the canvas the same size
         gl.canvas.width  = screenWidth;
         gl.canvas.height = screenHeight;
