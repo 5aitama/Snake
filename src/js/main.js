@@ -18,19 +18,18 @@ const fsPath = './src/shaders/fragment.frag'
 
 
 async function OnDocumentReady() {
+
     /**
      * @type HTMLCanvasElement
      */
     const canvas = document.getElementById(canvasID)
-    canvas.height = document.body.clientHeight
-    canvas.width = document.body.clientWidth
 
     // Get webgl context
     const gl = canvas.getContext('webgl')
     
     // Check if the current webGL rendering context is supported
     if(!gl) {
-        alert('Unable to initialize WebGL. Your browser or machine may not support it. :\'(')
+        alert('Unable to initialize WebGL. Your browser or machine may not support it 🥺, please change your f**king computer now!')
         return
     }
 
@@ -154,8 +153,8 @@ function DrawScene(canvas, gl, programInfos, buffers, time)
 /**
  * Init a shader program.
  * @param {WebGLRenderingContext} gl WebGL rendering context
- * @param {string} vsSource vertex shader source
- * @param {string} fsSource fragment shader source
+ * @param {string} vsSource Vertex shader source
+ * @param {string} fsSource Fragment shader source
  * @returns {WebGLProgram} Shader program
  */
 function InitShaderProgram(gl, vsSource, fsSource)
