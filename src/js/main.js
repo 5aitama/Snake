@@ -8,13 +8,13 @@ const canvasID = 'myFuckingCanvas'
  * Vertex shader path
  * @type string
  */
-const vsPath = './../shaders/vertex.vert'
+const vsPath = './src/shaders/vertex.vert'
 
 /**
  * Fragment shader path
  * @type string
  */
-const fsPath = './../shaders/fragment.frag'
+const fsPath = './src/shaders/fragment.frag'
 
 
 async function OnDocumentReady() {
