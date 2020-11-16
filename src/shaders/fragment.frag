@@ -8,9 +8,9 @@ uniform vec2 iResolution;
 
 uniform float blendForce;
 
-#define MIN_DIST 0.001
-#define MAX_DIST 1000.
-#define MAX_ITER 500
+#define MIN_DIST 0.01
+#define MAX_DIST 100.
+#define MAX_ITER 100
 
 float sdf_blend(float d1, float d2, float a)
 {
@@ -56,6 +56,7 @@ vec3 GetNormal(vec3 p)
 
     return normalize(n);
 }
+
 // https://gist.github.com/companje/29408948f1e8be54dd5733a74ca49bb9
 float map(float value, float min1, float max1, float min2, float max2) {
   return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
@@ -101,9 +102,8 @@ void main()
     float value = RayMarch(rayOrigin, rayDirection);
 
     vec3 p = rayOrigin + rayDirection * value;
-    // rgba(255, 168, 1,1.0)
     vec3 o_color = mix(vec3(1, 0, .4), vec3(1., 0, 0.2), (uv.x + 1.) / 2.);
     vec3 col = vec3(pow(GetLight(p), 0.65)) * o_color;
-    // col = vec3(pow(GetLight(p), 0.425));
+    
     gl_FragColor = vec4(col, 1.0);
 }
