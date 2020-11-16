@@ -17,7 +17,19 @@ const vsPath = './src/shaders/vertex.vert'
 const fsPath = './src/shaders/fragment.frag'
 
 
+var mouse = {
+    x: 0,
+    y: 0,
+}
+
 async function OnDocumentReady() {
+
+    document.addEventListener('mousemove', (e) => {
+        mouse.x = (e.clientX - window.innerWidth / 2.) / 50;
+        mouse.y = (e.clientY - window.innerHeight) / 50;
+
+        // console.log(mouse);
+    });
 
     /**
      * @type HTMLCanvasElement
@@ -52,6 +64,8 @@ async function OnDocumentReady() {
         uniformLocations: {
             iTime: gl.getUniformLocation(shaderProgram, 'iTime'),
             iResolution: gl.getUniformLocation(shaderProgram, 'iResolution'),
+            blendForce: gl.getUniformLocation(shaderProgram, 'blendForce'),
+            iMousePosition: gl.getUniformLocation(shaderProgram, 'iMousePosition'),
         }
     }
 
@@ -140,6 +154,8 @@ function DrawScene(canvas, gl, programInfos, buffers, time)
 
     gl.uniform2f(programInfos.uniformLocations.iResolution, iResolution.x, iResolution.y)
     gl.uniform1f(programInfos.uniformLocations.iTime, time)
+    gl.uniform1f(programInfos.uniformLocations.blendForce, 2.)
+    gl.uniform2f(programInfos.uniformLocations.iMousePosition, mouse.x, mouse.y);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.iBuffer)
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0)

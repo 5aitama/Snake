@@ -6,10 +6,11 @@ uniform float iTime;
 // The screen resolution in pixel
 uniform vec2 iResolution;
 
+uniform float blendForce;
+
 #define MIN_DIST 0.001
 #define MAX_DIST 1000.
 #define MAX_ITER 500
-
 
 float sdf_blend(float d1, float d2, float a)
 {
@@ -25,15 +26,26 @@ float smin( float a, float b, float k )
 
 float Scene(vec3 position)
 {
-    vec4 sphere = vec4(0, 0, 0, 1);
-    vec4 sphere1 = vec4(0, 3, 0, 1);
+    vec4 Geometries[3];
 
-    sphere1.y += sin(iTime) * 2.;
-    
-    float sphereDist = length(position - sphere.xyz) - sphere.w;
-    float sphereDist1= length(position - sphere1.xyz) - sphere1.w;
-    float planeDist = position.y;
-    return smin(smin(sphereDist, sphereDist1, .8), planeDist, .8);
+    Geometries[0] = vec4(0, 0, 0, 2);
+    Geometries[1] = vec4(1, 3, 0, 1);
+    Geometries[2] = vec4(-1, 3, 0, 1);
+
+    // Geometries.length();
+
+    Geometries[1].y += sin(iTime) * 3.5;
+    Geometries[2].y += cos(iTime) * 3.5;
+
+    float v = position.y;
+
+    for(int i = 0; i < 3; i++)
+    {
+        float dist = length(position - Geometries[i].xyz) - Geometries[i].w;
+        v = smin(v, dist, blendForce);
+    }
+
+    return v;
 }
 
 vec3 GetNormal(vec3 p)
@@ -56,9 +68,7 @@ float RayMarch(vec3 origin, vec3 direction)
     for(int i = 0; i < MAX_ITER; i++)
     {
         currDist += Scene(origin + currDist * direction);
-
-        if(currDist < MIN_DIST || currDist > MAX_DIST)
-            break;
+        if(currDist < MIN_DIST || currDist > MAX_DIST) break;
     }
 
     return currDist;
@@ -66,18 +76,12 @@ float RayMarch(vec3 origin, vec3 direction)
 
 float GetLight(vec3 p)
 {
-    vec3 lightPos = vec3(5, 5, -10);
-    // lightPos.xz = vec2(sin(0), cos(0)) * 5.;
+    vec3 lightPos = vec3(20, 20, -20);
     vec3 lightVect = normalize(lightPos - p);
     vec3 normal = GetNormal(p);
     float dif = clamp(dot(normal, lightVect), 0.0, 1.0);
 
-    // float d = RayMarch(p + normal * MIN_DIST * 8., lightVect);
-
-    // if(d < length(lightPos - p))
-    //     dif *= 0.;
-
-    return map(dif, 0.0, 1.0, 0.7, 1.0);
+    return map(dif, 0.0, 1.0, 0.6, 1.0);
 }
 
 void main() 
@@ -91,14 +95,15 @@ void main()
     // Some math to get beautifull color x)
     // vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0, 2, 4));
 
-    vec3 rayOrigin = vec3(0, 3, -15);
+    vec3 rayOrigin = vec3(0, 5, -15);
     vec3 rayDirection = normalize(vec3(uv.xy, 1));
 
     float value = RayMarch(rayOrigin, rayDirection);
 
     vec3 p = rayOrigin + rayDirection * value;
     // rgba(255, 168, 1,1.0)
-    vec3 col = vec3(value);
-    col = vec3(pow(GetLight(p), 0.525));
+    vec3 o_color = mix(vec3(1, 0, .4), vec3(1., 0, 0.2), (uv.x + 1.) / 2.);
+    vec3 col = vec3(pow(GetLight(p), 0.65)) * o_color;
+    // col = vec3(pow(GetLight(p), 0.425));
     gl_FragColor = vec4(col, 1.0);
 }
