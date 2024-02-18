@@ -100,9 +100,11 @@ void main()
     vec3 rayDirection = normalize(vec3(uv.xy, 1));
 
     float value = RayMarch(rayOrigin, rayDirection);
+    // 1, 0, .4
+    // 1., 0., 0.2
 
     vec3 p = rayOrigin + rayDirection * value;
-    vec3 o_color = mix(vec3(1, 0, .4), vec3(1., 0, 0.2), (uv.x + 1.) / 2.);
+    vec3 o_color = mix(vec3(.70, .70, .70), vec3(.70, .70, .70), (uv.x + 1.) / 2.);
     vec3 col = vec3(pow(GetLight(p), 0.65)) * o_color;
     
     gl_FragColor = vec4(col, 1.0);
